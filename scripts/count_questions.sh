@@ -1,4 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# 5 is the number of scenario questions.
-expr 5 + $(cat README.md | grep \<\/summary\> | wc -l)
+set -eu
+
+count=$(echo $(( $(grep -E "\[Exercise\]|</summary>" -c README.md topics/*/README.md | awk -F: '{ s+=$2 } END { print s }' ))))
+
+echo "There are $count questions and exercises"
+
+sed -i "s/currently \*\*[0-9]*\*\*/currently \*\*$count\\**/" README.md
